@@ -3,6 +3,10 @@
 #define _BASE 0
 #define _FN1 1
 
+#ifdef RGBLIGHT_ENABLE
+#    define HSV_AMBER 32, 218, 255
+#endif
+
 #ifdef AUDIO_ENABLE
 #    define _LL_AUDIO 2
 #endif
@@ -43,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const rgblight_segment_t PROGMEM light_layer_base[] = RGBLIGHT_LAYER_SEGMENTS({0, 1, HSV_WHITE});
 const rgblight_segment_t PROGMEM light_layer_fn1[]  = RGBLIGHT_LAYER_SEGMENTS({0, 2, HSV_WHITE});
 #    ifdef AUDIO_ENABLE
-const rgblight_segment_t PROGMEM light_layer_audio[] = RGBLIGHT_LAYER_SEGMENTS({7, 1, HSV_WHITE});
+const rgblight_segment_t PROGMEM light_layer_audio[] = RGBLIGHT_LAYER_SEGMENTS({7, 1, HSV_AMBER});
 #    endif
 
 const rgblight_segment_t* const PROGMEM light_layers[] = RGBLIGHT_LAYERS_LIST(light_layer_base, light_layer_fn1,
