@@ -34,11 +34,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const rgblight_segment_t PROGMEM my_rgblight_layer_0[] = RGBLIGHT_LAYER_SEGMENTS({0, 1, HSV_WHITE});
 
 const rgblight_segment_t PROGMEM my_rgblight_layer_1[] = RGBLIGHT_LAYER_SEGMENTS({0, 2, HSV_WHITE});
+#endif
 
-#    ifdef AUDIO_ENABLE
+#if defined(RGBLIGHT_LAYERS) && defined(AUDIO_ENABLE)
 const rgblight_segment_t PROGMEM my_rgblight_layer_audio[] = RGBLIGHT_LAYER_SEGMENTS({7, 1, HSV_WHITE});
-#    endif
+#endif
 
+#ifdef RGBLIGHT_LAYERS
 const rgblight_segment_t* const PROGMEM my_rgblight_layers[] = RGBLIGHT_LAYERS_LIST(my_rgblight_layer_0, my_rgblight_layer_1,
 #    ifdef AUDIO_ENABLE
                                                                                     my_rgblight_layer_audio
@@ -74,8 +76,9 @@ void startup_user() {
     _delay_ms(10);  // gets rid of tick
     PLAY_SONG(s_seegson);
 }
+#endif
 
-#    ifdef RGBLIGHT_LAYERS
+#if defined(RGBLIGHT_LAYERS) && defined(AUDIO_ENABLE)
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
         case AU_TOG:
@@ -87,5 +90,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
     return true;
 }
-#    endif
 #endif
