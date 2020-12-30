@@ -32,7 +32,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef RGBLIGHT_LAYERS
 const rgblight_segment_t PROGMEM my_rgblight_layer_0[] = RGBLIGHT_LAYER_SEGMENTS({0, 1, HSV_WHITE});
-
 const rgblight_segment_t PROGMEM my_rgblight_layer_1[] = RGBLIGHT_LAYER_SEGMENTS({0, 2, HSV_WHITE});
 #endif
 
@@ -69,15 +68,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 #endif
 
-#ifdef AUDIO_ENABLE
-float s_seegson[][2] = SONG(SEEGSON);
-
-void startup_user() {
-    _delay_ms(10);  // gets rid of tick
-    PLAY_SONG(s_seegson);
-}
-#endif
-
 #if defined(RGBLIGHT_LAYERS) && defined(AUDIO_ENABLE)
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
@@ -89,5 +79,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             break;
     }
     return true;
+}
+#endif
+
+#ifdef AUDIO_ENABLE
+float s_seegson[][2] = SONG(SEEGSON);
+
+void startup_user() {
+    _delay_ms(10);  // gets rid of tick
+    PLAY_SONG(s_seegson);
 }
 #endif
