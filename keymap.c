@@ -35,26 +35,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* clang-format on */
 
 #ifdef RGBLIGHT_LAYERS
+/* ============
+ * Light layers
+ * ============ */
+
+// Define light layers
 const rgblight_segment_t PROGMEM light_layer_base[] = RGBLIGHT_LAYER_SEGMENTS({0, 1, HSV_WHITE});
 const rgblight_segment_t PROGMEM light_layer_fn1[]  = RGBLIGHT_LAYER_SEGMENTS({0, 2, HSV_WHITE});
-#endif
-
-#if defined(RGBLIGHT_LAYERS) && defined(AUDIO_ENABLE)
+#    ifdef AUDIO_ENABLE
 const rgblight_segment_t PROGMEM light_layer_audio[] = RGBLIGHT_LAYER_SEGMENTS({7, 1, HSV_WHITE});
+#    endif
 
-void set_audio_light_layer(void) { rgblight_set_layer_state(_LL_AUDIO, is_audio_on()); }
-#endif
-
-#ifdef RGBLIGHT_LAYERS
 const rgblight_segment_t* const PROGMEM light_layers[] = RGBLIGHT_LAYERS_LIST(light_layer_base, light_layer_fn1,
 #    ifdef AUDIO_ENABLE
                                                                               light_layer_audio
 #    endif
 );
-#endif
+
+// Set light layer on layer change
+layer_state_t layer_state_set_user(layer_state_t state) {
+    rgblight_set_layer_state(_BASE, layer_state_cmp(state, _BASE));
+    rgblight_set_layer_state(_FN1, layer_state_cmp(state, _FN1));
+    return state;
+}
+
+#    ifdef AUDIO_ENABLE
+// Helper to set audio indicator light layer
+void set_audio_light_layer(void) { rgblight_set_layer_state(_LL_AUDIO, is_audio_on()); }
+#    endif
 
 void keyboard_post_init_user(void) {
-#ifdef RGBLIGHT_LAYERS
     rgblight_layers = light_layers;
 
     // Set initial light layers
@@ -62,19 +72,9 @@ void keyboard_post_init_user(void) {
 #    ifdef AUDIO_ENABLE
     set_audio_light_layer();
 #    endif
-#endif
 }
 
-// Set light layer on layer change
-#ifdef RGBLIGHT_LAYERS
-layer_state_t layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(_BASE, layer_state_cmp(state, _BASE));
-    rgblight_set_layer_state(_FN1, layer_state_cmp(state, _FN1));
-    return state;
-}
-#endif
-
-#if defined(RGBLIGHT_LAYERS) && defined(AUDIO_ENABLE)
+#    ifdef AUDIO_ENABLE
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
         case AU_TOG:
@@ -86,7 +86,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
     return true;
 }
+#    endif
 #endif
+
+/* =============
+ * Startup sound
+ * ============= */
 
 #ifdef AUDIO_ENABLE
 float s_seegson[][2] = SONG(SEEGSON);
